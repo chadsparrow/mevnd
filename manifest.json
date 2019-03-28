@@ -1,0 +1,13 @@
+{
+  "LGS_APP_NAME": "Sugoi_Custom_Portal",
+  "LGS_APP_VER": "1.3.4",
+  "LGS_APP_SUBDOMAIN": "portal",
+  "LGS_APP_DOMAIN": "sugoi.com",
+  "LGS_DOCKER_REGISTRY_SERVER": "registry.gitlab.com/garneau-dev/sugoi/custom-proofs/app",
+  "LGS_CONTAINER_NAME": "customproofs",
+  "LGS_HOST_BASE_DIR": "/data/sites",
+  "LGS_HOST_APP_DIR": "sugoi-custom-proofs",
+  "LGS_HTTP_PORT_MAINTENANCE": "8498",
+  "LGS_HTTP_PORT_APPLICATION": "5000",
+  "LGS_APP_SUBNET_ID": "20"
+}

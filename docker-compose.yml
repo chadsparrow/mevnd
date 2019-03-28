@@ -1,0 +1,45 @@
+version: "3"
+
+networks :
+  default :
+    ipam :
+      driver: default
+      config:
+        - subnet: ${LGS_HOST_SUBNET}/24
+services:
+  mongo:
+    restart: always
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - /data/storage/sugoi-custom-proofs.mongodb:/data/db
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    command: mongod --auth
+    env_file:
+      - .env
+  app:
+    command: npm run start
+    image: ${LGS_DOCKER_IMAGE}
+    restart: always
+    working_dir: /usr/src/app/server
+    ports:
+      - "5000:5000"
+    volumes:
+      # use this volume for staging
+      #- /data/sites/ssl-certs/sugoi:/usr/src/app/server/certs
+      # use this volume for production
+      - /data/certs/sugoi:/usr/src/app/server/certs
+      - /data/logs/sugoi-custom-proofs/npm:/root/.npm/
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+
+

@@ -1,0 +1,38 @@
+version: "3"
+
+# Setup Node.js container / MondoDB containers
+
+services:
+  server:
+    build: ./server
+    container_name: sugoi_portal
+    command: npm run dev
+    image: registry.gitlab.com/garneau-dev/sugoi/custom-proofs/server:1.0.0
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    env_file:
+      - dev.env
+  mongo:
+    container_name: mongo
+    restart: always
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodbdata:/data/db
+    env_file:
+      - dev.env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    command: mongod --auth
+volumes:
+  mongodbdata:
