@@ -5,9 +5,9 @@ version: "3"
 services:
   server:
     build: ./server
-    container_name: sugoi_portal
+    container_name: kit_creator
     command: npm run dev
-    image: registry.gitlab.com/garneau-dev/sugoi/custom-proofs/server:1.0.0
+    image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/server:0.1.0
     restart: always
     ports:
       - "5000:5000"

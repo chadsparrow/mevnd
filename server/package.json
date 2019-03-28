@@ -1,0 +1,19 @@
+{
+  "name": "kit-creator",
+  "version": "0.1.0",
+  "description": "Kit Creator App for LG/Sugoi",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "author": "Chad Sparrow",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
