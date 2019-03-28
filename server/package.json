@@ -14,6 +14,9 @@
     "nodemon": "^1.18.10"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "config": "^3.0.1",
+    "express": "^4.16.4",
+    "helmet": "^3.16.0",
+    "morgan": "^1.9.1"
   }
 }
