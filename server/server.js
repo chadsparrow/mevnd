@@ -3,15 +3,17 @@ const config = require('config');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const express = require('express');
+const cors = require('cors');
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-//HELMET
+//HELMET & CORS
 app.use(helmet());
-debug('Helmet running...');
+app.use(cors());
+debug('Helmet & CORS running...');
 
 //CONFIGURATION
 debug('Application Name: ' + config.get('name'));
