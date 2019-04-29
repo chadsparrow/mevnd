@@ -16,7 +16,7 @@ app.use(cors());
 debug('Helmet & CORS running...');
 
 //CONFIGURATION
-debug('Application Name: ' + config.get('name'));
+console.log('Application Name: ' + config.get('name'));
 
 //MORGAN
 if (app.get('env') === 'development') {
@@ -29,4 +29,4 @@ app.get('/', (req, res) => {
 });
 
 const PORT = config.get('PORT');
-app.listen(PORT, () => debug(`Listening on port 5000...`));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
