@@ -1,3 +1,3 @@
-# Kit Creator
+# Team Builder - Kit Order Replacement
 
-the kit creator store used for both LG and Sugoi
+custom kit team store online app used for both LG and Sugoi

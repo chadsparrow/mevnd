@@ -1,35 +1,49 @@
 version: "3"
 
-# Setup Node.js container / MondoDB containers
-
 services:
-  server:
-    build: ./server
-    container_name: kit_creator
-    command: npm run dev
-    image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/server:0.1.0
+  client:
+    build: ./client
+    container_name: team_builder_front
+    command: npm run serve
+    image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/frontend:0.1.0
     restart: always
     ports:
-      - "5000:5000"
+      - "8080:8080"
     volumes:
-      - ./server:/usr/src/app
+      - ./client:/usr/src/client
+      - /usr/src/client/node_modules
+    depends_on:
+      - mongo
+    links:
+      - mongo
+      - server
+  server:
+    build: ./server
+    container_name: team_builder_back
+    command: npm run dev
+    image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/backend:0.1.0
+    restart: always
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./server:/usr/src/server
       - /usr/src/app/node_modules
     depends_on:
       - mongo
     links:
       - mongo
     env_file:
-      - dev.env
+      - .env
   mongo:
-    container_name: mongo
+    container_name: team_builder_mongo
     restart: always
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongodbdata:/data/db
     env_file:
-      - dev.env
+      - .env
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}

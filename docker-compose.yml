@@ -11,7 +11,7 @@ services:
     restart: always
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27018"
     volumes:
       - /data/storage/sugoi-custom-proofs.mongodb:/data/db
       - /etc/timezone:/etc/timezone:ro
@@ -28,7 +28,7 @@ services:
     restart: always
     working_dir: /usr/src/app/server
     ports:
-      - "5000:5000"
+      - "5001:5001"
     volumes:
       # use this volume for staging
       #- /data/sites/ssl-certs/sugoi:/usr/src/app/server/certs
