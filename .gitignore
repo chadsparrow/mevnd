@@ -3,3 +3,5 @@ dev.env
 /logs
 server/logs
 node_modules
+/public_assets
+
