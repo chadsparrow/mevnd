@@ -1,10 +1,9 @@
 {
-  "name": "team-builder",
-  "version": "1.0.0",
+  "name": "lgs-team-builder",
+  "version": "0.1.0",
   "description": "Kit Order Replacement App for LG/Sugoi",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js",
     "start": "node server.js"
   },
@@ -14,6 +13,7 @@
     "nodemon": "^1.18.10"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "config": "^3.0.1",
     "cors": "^2.8.5",
     "debug": "^4.1.1",

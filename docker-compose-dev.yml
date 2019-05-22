@@ -1,52 +1,33 @@
 version: "3"
-
 services:
-  client:
-    build: ./client
-    container_name: team_builder_front
-    command: npm run serve
-    image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/frontend:0.1.0
-    restart: always
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./client:/usr/src/client
-      - /usr/src/client/node_modules
-    depends_on:
-      - mongo
-    links:
-      - mongo
-      - server
   server:
     build: ./server
-    container_name: team_builder_back
+    container_name: team_builder_app
     command: npm run dev
-    image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/backend:0.1.0
+    image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/app:0.1.0
     restart: always
     ports:
-      - "5001:5001"
+      - 5001:5001
     volumes:
-      - ./server:/usr/src/server
+      - ./server:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      - mongo
-    links:
       - mongo
     env_file:
       - .env
   mongo:
-    container_name: team_builder_mongo
+    container_name: mongo
     restart: always
     image: mongo
-    ports:
-      - "27018:27017"
     volumes:
       - mongodbdata:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     env_file:
       - .env
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-    command: mongod --auth
+    command: mongod --port 27018
+    ports:
+      - 27018:27018
 volumes:
   mongodbdata:

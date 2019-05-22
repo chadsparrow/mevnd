@@ -3,79 +3,83 @@ const Schema = mongoose.Schema;
 const timestamps = require('mongoose-timestamp');
 
 const MemberSchema = new Schema({
-    member_first_name: {
+    first_name: {
         type: String,
         required: true
     },
-    member_last_name: {
+    last_name: {
         type: String,
         required: true
     },
-    member_name: {
+    name: {
         type: String
     },
-    member_address1: {
+    address1: {
         type: String,
         required: true
     },
-    member_address2: {
+    address2: {
         type: String
     },
-    member_city: {
+    city: {
         type: String,
         required: true
     },
-    member_state_prov: {
+    state_prov: {
         type: String,
         required: true
     },
-    member_country: {
+    country: {
         type: String,
         required: true
     },
-    member_zip_postal: {
+    zip_postal: {
         type: String,
         required: true
     },
-    member_phone: {
+    phone: {
         type: String,
         required: true
     },
-    member_email: {
+    email: {
         type: String,
         required: true
     },
-    member_ship_name: {
+    password: {
+        type: String,
+        required: true
+    },
+    ship_name: {
         type: String
     },
-    member_ship_address1: {
+    ship_address1: {
         type: String
     },
-    member_ship_address2: {
+    ship_address2: {
         type: String
     },
-    member_ship_city: {
+    ship_city: {
         type: String
     },
-    member_ship_state_prov: {
+    ship_state_prov: {
         type: String
     },
-    member_ship_country: {
+    ship_country: {
         type: String
     },
-    member_ship_zip_postal: {
+    ship_zip_postal: {
         type: String
     },
-    member_ship_phone: {
+    ship_phone: {
         type: String
     },
-    member_ship_email: {
+    ship_email: {
         type: String
     },
-    member_timezone: {
+    timezone: {
         type: String
     },
-    member_avatar_url: {
+    avatar_url: {
         type: String,
         default: null
     }

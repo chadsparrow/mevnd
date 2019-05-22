@@ -11,7 +11,7 @@ services:
     restart: always
     image: mongo
     ports:
-      - "27018:27018"
+      - "27018:27017"
     volumes:
       - /data/storage/sugoi-custom-proofs.mongodb:/data/db
       - /etc/timezone:/etc/timezone:ro
