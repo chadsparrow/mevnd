@@ -24,24 +24,22 @@ if (app.get('env') === 'development') {
     app.use(morgan('tiny'));
     debug(`Morgan enabled...`);
 }
+
+// MongoDB Connection using config & .env in docker for credentials
 const DB_HOST = config.get('database.host');
-
-// MongoDB Connection using .env in docker for credentials
-const connectWithRetry = async () => {
-    try {
-        const dbConnection = await mongoose.connect(DB_HOST, { useNewUrlParser: true, autoReconnect: true, useFindAndModify: false })
-        console.info("Connected to MongoDB...");
-    } catch (error) {
-        console.log(error);
-        setTimeout(connectWithRetry, 5000);
-    }
-};
-
+const connectWithRetry = () => {
+    mongoose.connect(DB_HOST, { useNewUrlParser: true, autoReconnect: true, useFindAndModify: false })
+        .then(() => console.info("Connected to MongoDB.."))
+        .catch(error => {
+            console.log(error.message);
+            setTimeout(connectWithRetry, 5000);
+        })
+}
 connectWithRetry();
 
 
 // Load API Routes
-app.use("/api/members", require('./routes/api/members'));
+app.use("/api/members", require('./routes/members'));
 
 const SERVER_PORT = config.get('server.port') || 5001;
 app.listen(SERVER_PORT, () => console.info(`Listening on port ${SERVER_PORT}...`));

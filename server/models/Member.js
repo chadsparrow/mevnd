@@ -1,41 +1,45 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 const timestamps = require('mongoose-timestamp');
 
-const MemberSchema = new Schema({
-    first_name: {
-        type: String,
-        required: true
-    },
-    last_name: {
-        type: String,
-        required: true
-    },
+const MemberSchema = new mongoose.Schema({
     name: {
-        type: String
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 50,
+        uppercase: true
     },
     address1: {
         type: String,
-        required: true
+        required: true,
+        minlength: 10,
+        uppercase: true
     },
     address2: {
-        type: String
+        type: String,
+        uppercase: true
     },
     city: {
         type: String,
-        required: true
+        required: true,
+        uppercase: true
     },
     state_prov: {
         type: String,
-        required: true
+        required: true,
+        uppercase: true,
+        minlength: 2
     },
     country: {
         type: String,
-        required: true
+        required: true,
+        uppercase: true
     },
     zip_postal: {
         type: String,
-        required: true
+        required: true,
+        uppercase: true,
+        minlength: 5
     },
     phone: {
         type: String,
@@ -49,32 +53,51 @@ const MemberSchema = new Schema({
         type: String,
         required: true
     },
-    ship_name: {
-        type: String
+    shipping_same: {
+        type: Boolean,
+        default: true
     },
-    ship_address1: {
-        type: String
+    shipping_name: {
+        type: String,
+        required: function () { return this.shipping_same; },
+        minlength: 5,
+        uppercase: true
     },
-    ship_address2: {
-        type: String
+    shipping_address1: {
+        type: String,
+        required: function () { return this.shipping_same },
+        minlength: 10,
+        uppercase: true
     },
-    ship_city: {
-        type: String
+    shipping_address2: {
+        type: String,
+        uppercase: true
     },
-    ship_state_prov: {
-        type: String
+    shipping_city: {
+        type: String,
+        uppercase: true,
+        required: function () { return this.shipping_same }
     },
-    ship_country: {
-        type: String
+    shipping_state_prov: {
+        type: String,
+        uppercase: true,
+        required: function () { return this.shipping_same },
+        minlength: 2
     },
-    ship_zip_postal: {
-        type: String
+    shipping_country: {
+        type: String,
+        uppercase: true,
+        required: function () { return this.shipping_same }
     },
-    ship_phone: {
-        type: String
+    shipping_zip_postal: {
+        type: String,
+        uppercase: true,
+        required: function () { return this.shipping_same },
+        minlength: 5
     },
-    ship_email: {
-        type: String
+    shipping_phone: {
+        type: String,
+        required: function () { return this.shipping_same }
     },
     timezone: {
         type: String

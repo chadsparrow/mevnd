@@ -13,6 +13,7 @@
     "nodemon": "^1.18.10"
   },
   "dependencies": {
+    "@hapi/joi": "^15.0.3",
     "bcryptjs": "^2.4.3",
     "config": "^3.0.1",
     "cors": "^2.8.5",
