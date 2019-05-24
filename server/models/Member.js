@@ -106,6 +106,12 @@ const MemberSchema = new mongoose.Schema({
     avatar_url: {
         type: String,
         default: null
+    },
+    resetPasswordToken: {
+        type: String
+    },
+    resetPasswordExpires: {
+        type: Date
     }
 });
 
@@ -143,7 +149,8 @@ function validateEmail(member) {
 }
 function validatePassword(member) {
     const schema = {
-        password: Joi.string().min(8).required()
+        oldpassword: Joi.string().min(8).required(),
+        newpassword: Joi.string().min(8).required()
     }
 
     return Joi.validate(member, schema);

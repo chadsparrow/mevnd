@@ -8,7 +8,7 @@ const { Member, validateMember, validateEmail, validatePassword } = require("../
 router.get("/", async (req, res) => {
   try {
     const members = await Member.find();
-    if (!members) return res.status(404).send('No Members were found.')
+    if (!members) return res.status(204).send('No Members were found.')
     res.send(members);
   } catch (error) {
     console.log(error.message);
@@ -20,7 +20,7 @@ router.get("/:id", async (req, res) => {
   try {
     const member = await Member.findOne({ _id: req.params.id });
     if (!member) return res.status(404).send("Member with the given ID was not found.");
-    res.status(200).send(member);
+    res.send(member);
   } catch (error) {
     console.log(error.message)
   }
@@ -30,7 +30,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   //Check for validation errors
   const { error } = validateMember(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(error);
 
   // desctructure the req.body
   const {
@@ -58,11 +58,11 @@ router.post("/", async (req, res) => {
 
   // Check if member already exists
   try {
-    const result = await Member.findOne({ email });
-    if (result) return res.status(400).send('Member already registered with given email address.');
+    const member = await Member.findOne({ email });
+    if (member) return res.status(400).send('Member already registered with given email address.');
 
     // Create new member object
-    let member = new Member({
+    const newMember = new Member({
       name,
       address1,
       address2,
@@ -85,11 +85,15 @@ router.post("/", async (req, res) => {
       shipping_email
     });
 
-    //save new member to the database and send result back
-    member = await member.save();
-    if (!member) return res.status(400).send("Could not add member");
+    bcrypt.genSalt(10, (err, salt) => {
+      bcrypt.hash(newMember.password, salt, async (err, hash) => {
+        newMember.password = hash;
+        //save new member to the database and send result back
+        await newMember.save();
+        res.status(201).send(`${newMember.email} added as a member.`);
+      });
+    });
 
-    res.status(201).send(`${member.email} added as a member.`);
   } catch (error) {
     console.log(error.message);
   }
@@ -98,16 +102,16 @@ router.post("/", async (req, res) => {
 // PUT /api/members/:id
 router.put("/:id", async (req, res) => {
   const { error } = validateMember(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(error);
 
   delete req.body.password;
   delete req.body.email;
 
   try {
-    const member = await Member.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const member = await Member.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
     if (!member) return res.status(404).send('Member with the given ID was not found.');
 
-    res.status(200).send(`${member.email} has been updated.`)
+    res.send(`${member.email} has been updated.`)
   } catch (error) {
     console.log(error.message);
   }
@@ -116,7 +120,7 @@ router.put("/:id", async (req, res) => {
 // PATCH /api/members/email/:id
 router.patch("/email/:id", async (req, res) => {
   const { error } = validateEmail(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(error);
 
   try {
     let member = await Member.findOne({ _id: req.params.id });
@@ -129,40 +133,48 @@ router.patch("/email/:id", async (req, res) => {
     const emailCheck = await Member.findOne({ _id: { $ne: req.params.id }, email: req.body.email });
     if (emailCheck) return res.status(400).send('Member with the given email address already registered');
 
-    member = await Member.findByIdAndUpdate(req.params.id, { email: req.body.email }, { new: true });
-    if (!member) return res.status(400).send('Could not save password.');
+    member = await Member.findByIdAndUpdate({ _id: req.params.id }, { email: req.body.email }, { new: true });
 
-    res.status(200).send(`${member.name} email address updated to ${member.email}`);
+    res.send(`${member.name} email address updated to ${member.email}`);
 
   } catch (error) {
-
+    console.log(error.message);
   }
 })
 
 // PATCH /api/members/password/:id
 router.patch("/password/:id", async (req, res) => {
   const { error } = validatePassword(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send(error);
+
+  if (req.body.newpassword === req.body.oldpassword) return res.status(400).send('Old and New Passwords cannot match.')
 
   try {
-    let member = await Member.findOne({ _id: req.params.id });
+    const member = await Member.findById({ _id: req.params.id });
     if (!member) return res.status(404).send('Member with the given ID was not found.');
 
-    member = await Member.findByIdAndUpdate(req.params.id, { password: req.body.password }, { new: true });
-    res.status(200).send(`Password has been updated.`);
+    bcrypt.compare(req.body.oldpassword, member.password, (err, result) => {
+      if (!result) return res.status(400).send('Password incorrect.');
 
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(req.body.newpassword, salt, async (err, hash) => {
+          member.password = hash;
+          await member.save();
+          res.send(`Password has been updated.`);
+        });
+      });
+    });
   } catch (error) {
-
+    console.log(error.message);
   }
 })
 
 // DELETE /api/members/:id
 router.delete("/:id", async (req, res) => {
   try {
-    const deletedMember = await Member.findOneAndRemove({ _id: req.params.id });
-    if (!deletedMember) return res.status(404).send("Member with the given ID was not found.");
-
-    res.status(200).send(`${deletedMember}.email was removed.`);
+    const member = await Member.findByIdAndRemove(req.params.id);
+    if (!member) return res.status(400).send('Member with the given ID was not found.')
+    res.send(`${member.email} was removed.`);
   } catch (error) {
     console.log(error.message);
   }
