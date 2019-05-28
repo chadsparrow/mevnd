@@ -40,6 +40,7 @@ connectWithRetry();
 
 // Load API Routes
 app.use("/api/members", require('./routes/members'));
+app.use("/api/catalogs", require('./routes/catalogs'));
 
 const SERVER_PORT = config.get('server.port') || 5001;
 app.listen(SERVER_PORT, () => console.info(`Listening on port ${SERVER_PORT}...`));

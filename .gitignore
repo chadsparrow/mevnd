@@ -4,4 +4,4 @@ dev.env
 server/logs
 node_modules
 /public_assets
-
+.vscode
