@@ -5,21 +5,23 @@ const { Catalog, validateCatalog } = require("../models/Catalog");
 
 // GET /api/catalogs
 router.get("/", async (req, res) => {
-  const catalogs = await Catalog.find().select('brand year season catalog_active');
-  res.send(catalogs);
+  try {
+    const catalogs = await Catalog.find().select('brand year season catalog_active');
+    res.send(catalogs);
+  } catch (error) {
+    console.log(error.message);
+  }
 });
 
 // GET /api/catalogs/:id
 router.get("/:id", async (req, res) => {
-  const catalog = await Catalog.findOne({ _id: req.params.id });
-  if (!catalog) return res.status(404).send('Catalog with the given ID was not found.')
-  res.send(catalog);
-});
-
-// GET /api/catalogs/:season
-router.get("/year/:year", async (req, res) => {
-  const catalogs = await Catalog.find({ year: req.params.year });
-  res.send(catalogs);
+  try {
+    const catalog = await Catalog.findOne({ _id: req.params.id });
+    if (!catalog) return res.status(404).send('Catalog with the given ID was not found.')
+    res.send(catalog);
+  } catch (error) {
+    console.log(error.message);
+  }
 });
 
 // POST /api/catalogs
