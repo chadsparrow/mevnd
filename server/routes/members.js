@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
 // GET /api/members/:id
 router.get("/:id", async (req, res) => {
   try {
-    const member = await Member.findOne({ _id: req.params.id });
+    const member = await Member.lookup(req.params.id);
     if (!member) return res.status(404).send("Member with the given ID was not found.");
     res.send(member);
   } catch (error) {
@@ -123,7 +123,7 @@ router.patch("/email/:id", async (req, res) => {
   if (error) return res.status(400).send(error);
 
   try {
-    let member = await Member.findOne({ _id: req.params.id });
+    let member = await Member.lookup(req.params.id);
     if (!member) return res.status(404).send('Member with the given ID was not found.');
 
     if (member.email === req.body.email) {
@@ -150,7 +150,7 @@ router.patch("/password/:id", async (req, res) => {
   if (req.body.newpassword === req.body.oldpassword) return res.status(400).send('Old and New Passwords cannot match.')
 
   try {
-    const member = await Member.findById({ _id: req.params.id });
+    const member = await Member.lookup(req.params.id);
     if (!member) return res.status(404).send('Member with the given ID was not found.');
 
     bcrypt.compare(req.body.oldpassword, member.password, (err, result) => {

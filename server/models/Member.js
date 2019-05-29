@@ -115,6 +115,12 @@ const MemberSchema = new mongoose.Schema({
     }
 });
 
+MemberSchema.statics.lookup = function (memberId) {
+    return this.findOne({
+        _id: memberId
+    });
+}
+
 function validateMember(member) {
     const schema = {
         name: Joi.string().min(5).max(50).required(),

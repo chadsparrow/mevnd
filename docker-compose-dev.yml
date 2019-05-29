@@ -1,11 +1,9 @@
 version: "3"
 services:
   server:
-    build: ./server
     container_name: team_builder_app
-    command: npm run dev
     image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/app:0.1.0
-    restart: always
+    restart: unless-stopped
     ports:
       - 5001:5001
     volumes:
@@ -15,9 +13,10 @@ services:
       - mongo
     env_file:
       - .env
+    command: npm run dev
   mongo:
     container_name: mongo
-    restart: always
+    restart: unless-stopped
     image: mongo
     volumes:
       - mongodbdata:/data/db

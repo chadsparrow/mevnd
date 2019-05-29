@@ -20,7 +20,7 @@ debug('Helmet & CORS running...');
 console.info('Application Name: ' + config.get('name'));
 
 //MORGAN
-if (app.get('env') === 'development') {
+if (app.get('env') === 'development' || app.get('env') === 'test') {
     app.use(morgan('tiny'));
     debug(`Morgan enabled...`);
 }
