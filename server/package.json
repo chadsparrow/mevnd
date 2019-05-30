@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": ""
+    "test": "jest --watchAll --verbose"
   },
   "author": "Chad Sparrow",
   "license": "UNLICENSED",
   "devDependencies": {
+    "jest": "^24.8.0",
     "nodemon": "^1.18.10"
   },
   "dependencies": {
