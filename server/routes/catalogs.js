@@ -26,11 +26,9 @@ router.get("/:id", async (req, res) => {
 
 // POST /api/catalogs
 router.post("/", async (req, res) => {
-  //Check for validation errors
   const { error } = validateCatalog(req.body);
   if (error) return res.status(400).send(error);
 
-  // desctructure the req.body
   const {
     brand,
     year,
@@ -38,12 +36,10 @@ router.post("/", async (req, res) => {
     season
   } = req.body
 
-  // Check if catalog already exists
   try {
     const catalog = await Catalog.findOne({ brand, year, season });
     if (catalog) return res.status(400).send('Catalog already exists.');
 
-    // Create new catalog object
     const newCatalog = new Catalog({
       brand,
       year,

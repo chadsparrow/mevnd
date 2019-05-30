@@ -1,4 +1,3 @@
-const debug = require('debug')('app:startup');
 const config = require('config');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -14,15 +13,15 @@ app.use(express.static('public'));
 //HELMET & CORS
 app.use(helmet());
 app.use(cors());
-debug('Helmet & CORS running...');
+console.info('Helmet & CORS running...');
 
 //CONFIGURATION
 console.info('Application Name: ' + config.get('name'));
 
 //MORGAN
-if (app.get('env') === 'development' || app.get('env') === 'test') {
+if (app.get('env') === 'development') {
     app.use(morgan('tiny'));
-    debug(`Morgan enabled...`);
+    console.info(`Morgan enabled...`);
 }
 
 // MongoDB Connection using config & .env in docker for credentials
@@ -36,7 +35,6 @@ const connectWithRetry = () => {
         })
 }
 connectWithRetry();
-
 
 // Load API Routes
 app.use("/api/members", require('./routes/members'));

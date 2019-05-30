@@ -13,7 +13,7 @@ services:
       - mongo
     env_file:
       - .env
-    command: npm run test
+    command: npm run dev
   mongo:
     container_name: mongo
     restart: always

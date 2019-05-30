@@ -118,7 +118,7 @@ const MemberSchema = new mongoose.Schema({
 MemberSchema.statics.lookup = function (memberId) {
     return this.findOne({
         _id: memberId
-    });
+    }).select('-password -__v -updatedAt');
 }
 
 function validateMember(member) {

@@ -8,10 +8,9 @@ const { Member, validateMember, validateEmail, validatePassword } = require("../
 router.get("/", async (req, res) => {
   try {
     const members = await Member.find();
-    if (!members) return res.status(204).send('No Members were found.')
     res.send(members);
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    console.log(err);
   }
 });
 
@@ -21,47 +20,43 @@ router.get("/:id", async (req, res) => {
     const member = await Member.lookup(req.params.id);
     if (!member) return res.status(404).send("Member with the given ID was not found.");
     res.send(member);
-  } catch (error) {
-    console.log(error.message)
+  } catch (err) {
+    console.log(err)
   }
 });
 
 // POST /api/members
 router.post("/", async (req, res) => {
-  //Check for validation errors
   const { error } = validateMember(req.body);
   if (error) return res.status(400).send(error);
 
-  // desctructure the req.body
-  const {
-    name,
-    address1,
-    address2,
-    city,
-    state_prov,
-    country,
-    zip_postal,
-    phone,
-    email,
-    password,
-    shipping_same,
-    shipping_name,
-    shipping_address1,
-    shipping_address2,
-    shipping_city,
-    shipping_state_prov,
-    shipping_country,
-    shipping_zip_postal,
-    shipping_phone,
-    shipping_email
-  } = req.body
-
-  // Check if member already exists
   try {
+    const {
+      name,
+      address1,
+      address2,
+      city,
+      state_prov,
+      country,
+      zip_postal,
+      phone,
+      email,
+      password,
+      shipping_same,
+      shipping_name,
+      shipping_address1,
+      shipping_address2,
+      shipping_city,
+      shipping_state_prov,
+      shipping_country,
+      shipping_zip_postal,
+      shipping_phone,
+      shipping_email
+    } = req.body
+
     const member = await Member.findOne({ email });
     if (member) return res.status(400).send('Member already registered with given email address.');
 
-    // Create new member object
     const newMember = new Member({
       name,
       address1,
@@ -93,9 +88,8 @@ router.post("/", async (req, res) => {
         res.status(201).send(`${newMember.email} added as a member.`);
       });
     });
-
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    console.log(err);
   }
 });
 
@@ -104,16 +98,16 @@ router.put("/:id", async (req, res) => {
   const { error } = validateMember(req.body);
   if (error) return res.status(400).send(error);
 
-  delete req.body.password;
-  delete req.body.email;
-
   try {
+    delete req.body.password;
+    delete req.body.email;
+
     const member = await Member.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
     if (!member) return res.status(404).send('Member with the given ID was not found.');
 
     res.send(`${member.email} has been updated.`)
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    console.log(err);
   }
 });
 
@@ -136,9 +130,8 @@ router.patch("/email/:id", async (req, res) => {
     member = await Member.findByIdAndUpdate({ _id: req.params.id }, { email: req.body.email }, { new: true });
 
     res.send(`${member.name} email address updated to ${member.email}`);
-
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    console.log(err);
   }
 })
 
@@ -147,9 +140,9 @@ router.patch("/password/:id", async (req, res) => {
   const { error } = validatePassword(req.body);
   if (error) return res.status(400).send(error);
 
-  if (req.body.newpassword === req.body.oldpassword) return res.status(400).send('Old and New Passwords cannot match.')
-
   try {
+    if (req.body.newpassword === req.body.oldpassword) return res.status(400).send('Old and New Passwords cannot match.')
+
     const member = await Member.lookup(req.params.id);
     if (!member) return res.status(404).send('Member with the given ID was not found.');
 
@@ -164,10 +157,10 @@ router.patch("/password/:id", async (req, res) => {
         });
       });
     });
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    console.log(err);
   }
-})
+});
 
 // DELETE /api/members/:id
 router.delete("/:id", async (req, res) => {
@@ -175,8 +168,8 @@ router.delete("/:id", async (req, res) => {
     const member = await Member.findByIdAndRemove(req.params.id);
     if (!member) return res.status(400).send('Member with the given ID was not found.')
     res.send(`${member.email} was removed.`);
-  } catch (error) {
-    console.log(error.message);
+  } catch (err) {
+    console.log(err);
   }
 });
 
