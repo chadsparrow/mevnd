@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const { Catalog, validateCatalog } = require("../models/Catalog");
+const { Catalog, validateCatalog, validateItem } = require("../models/Catalog");
 
 // GET /api/catalogs
 router.get("/", async (req, res) => {
   try {
     const catalogs = await Catalog.find().select('brand year season catalog_active');
+    if (catalogs && catalogs.length === 0) return res.send({ msg: 'There are no catalogs in the database.' })
     res.send(catalogs);
   } catch (error) {
     console.log(error.message);
@@ -17,7 +18,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const catalog = await Catalog.findOne({ _id: req.params.id });
-    if (!catalog) return res.status(404).send('Catalog with the given ID was not found.')
+    if (!catalog) return res.status(404).send({ msg: 'Catalog with the given ID was not found.' })
     res.send(catalog);
   } catch (error) {
     console.log(error.message);
@@ -28,7 +29,6 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   const { error } = validateCatalog(req.body);
   if (error) return res.status(400).send(error);
-
   const {
     brand,
     year,
@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
 
   try {
     const catalog = await Catalog.findOne({ brand, year, season });
-    if (catalog) return res.status(400).send('Catalog already exists.');
+    if (catalog) return res.status(400).send({ msg: 'Catalog already exists.' });
 
     const newCatalog = new Catalog({
       brand,
@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
     });
 
     const savedCatalog = await newCatalog.save();
-    res.send(`${savedCatalog.brand} ${savedCatalog.season} ${savedCatalog.year} is now in the database.`);
+    res.send({ msg: `${savedCatalog.brand} ${savedCatalog.season} ${savedCatalog.year} is now in the database.` });
 
   } catch (error) {
     console.log(error.message);

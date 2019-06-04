@@ -8,51 +8,61 @@ const MemberSchema = new mongoose.Schema({
         required: true,
         minlength: 5,
         maxlength: 50,
-        uppercase: true
+        uppercase: true,
+        trim: true
     },
     address1: {
         type: String,
         required: true,
         minlength: 10,
-        uppercase: true
+        uppercase: true,
+        trim: true
     },
     address2: {
         type: String,
-        uppercase: true
+        uppercase: true,
+        trim: true
     },
     city: {
         type: String,
         required: true,
-        uppercase: true
+        uppercase: true,
+        trim: true
     },
     state_prov: {
         type: String,
         required: true,
         uppercase: true,
-        minlength: 2
+        minlength: 2,
+        trim: true
     },
     country: {
         type: String,
         required: true,
-        uppercase: true
+        uppercase: true,
+        trim: true
     },
     zip_postal: {
         type: String,
         required: true,
         uppercase: true,
-        minlength: 5
+        minlength: 5,
+        trim: true
     },
     phone: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     shipping_same: {
         type: Boolean,
@@ -62,50 +72,60 @@ const MemberSchema = new mongoose.Schema({
         type: String,
         required: function () { return this.shipping_same; },
         minlength: 5,
-        uppercase: true
+        uppercase: true,
+        trim: true
     },
     shipping_address1: {
         type: String,
         required: function () { return this.shipping_same },
         minlength: 10,
-        uppercase: true
+        uppercase: true,
+        trim: true
     },
     shipping_address2: {
         type: String,
-        uppercase: true
+        uppercase: true,
+        trim: true
     },
     shipping_city: {
         type: String,
         uppercase: true,
-        required: function () { return this.shipping_same }
+        required: function () { return this.shipping_same },
+        trim: true
     },
     shipping_state_prov: {
         type: String,
         uppercase: true,
         required: function () { return this.shipping_same },
-        minlength: 2
+        minlength: 2,
+        trim: true
     },
     shipping_country: {
         type: String,
         uppercase: true,
-        required: function () { return this.shipping_same }
+        required: function () { return this.shipping_same },
+        trim: true
     },
     shipping_zip_postal: {
         type: String,
         uppercase: true,
         required: function () { return this.shipping_same },
-        minlength: 5
+        minlength: 5,
+        trim: true
     },
     shipping_phone: {
         type: String,
-        required: function () { return this.shipping_same }
+        required: function () { return this.shipping_same },
+        trim: true
     },
     timezone: {
-        type: String
+        type: String,
+        trim: true
     },
     avatar_url: {
         type: String,
-        default: null
+        default: null,
+        trim: true
     },
     resetPasswordToken: {
         type: String
@@ -123,25 +143,25 @@ MemberSchema.statics.lookup = function (memberId) {
 
 function validateMember(member) {
     const schema = {
-        name: Joi.string().min(5).max(50).required(),
-        address1: Joi.string().min(10).required(),
-        address2: Joi.string(),
-        city: Joi.string().required(),
-        state_prov: Joi.string().min(2).required(),
-        country: Joi.string().required(),
-        zip_postal: Joi.string().required(),
-        phone: Joi.string().required(),
+        name: Joi.string().min(5).max(50).required().trim(true),
+        address1: Joi.string().min(10).required().trim(true),
+        address2: Joi.string().trim(true),
+        city: Joi.string().required().trim(true),
+        state_prov: Joi.string().min(2).required().trim(true),
+        country: Joi.string().required().trim(true),
+        zip_postal: Joi.string().required().trim(true),
+        phone: Joi.string().required().trim(true),
         email: Joi.string().email().required({ minDomainSegments: 2 }),
-        password: Joi.string().min(8).required(),
+        password: Joi.string().min(8).required().trim(false),
         shipping_same: Joi.boolean(),
-        shipping_name: Joi.string().min(5).max(50).required(),
-        shipping_address1: Joi.string().min(10).required(),
-        shipping_address2: Joi.string(),
-        shipping_city: Joi.string().required(),
-        shipping_state_prov: Joi.string().min(2).required(),
-        shipping_country: Joi.string().required(),
-        shipping_zip_postal: Joi.string().required(),
-        shipping_phone: Joi.string().required()
+        shipping_name: Joi.string().min(5).max(50).required().trim(true),
+        shipping_address1: Joi.string().min(10).required().trim(true),
+        shipping_address2: Joi.string().trim(true),
+        shipping_city: Joi.string().required().trim(true),
+        shipping_state_prov: Joi.string().min(2).required().trim(true),
+        shipping_country: Joi.string().required().trim(true),
+        shipping_zip_postal: Joi.string().required().trim(true),
+        shipping_phone: Joi.string().required().trim(true)
     }
     return Joi.validate(member, schema);
 }
@@ -155,8 +175,8 @@ function validateEmail(member) {
 }
 function validatePassword(member) {
     const schema = {
-        oldpassword: Joi.string().min(8).required(),
-        newpassword: Joi.string().min(8).required()
+        oldpassword: Joi.string().min(8).required().trim(false),
+        newpassword: Joi.string().min(8).required().trim(false)
     }
 
     return Joi.validate(member, schema);
