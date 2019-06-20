@@ -1,3 +1,4 @@
 {
-    "name": "Team Builder"
+  "name": "Team Builder",
+  "jwtPrivateKey": ""
 }

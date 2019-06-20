@@ -7,18 +7,23 @@ const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 
+if (!config.get('jwtPrivateKey')) {
+  console.error('FATAL ERROR: jwtPrivateKey is not defined.');
+  process.exit(1);
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(helmet());
 app.use(cors());
+// Enable Proxy Trust
+app.enable('trust proxy');
 
 // Load API Routes
 app.use('/api/members', require('./routes/members'));
 app.use('/api/catalogs', require('./routes/catalogs'));
-
-// Enable Proxy Trust
-app.enable('trust proxy');
+app.use('/api/auth', require('./routes/auth'));
 
 //Configuration
 console.log('Application Name: ' + config.get('name'));

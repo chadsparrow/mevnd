@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const timestamps = require('mongoose-timestamp');
 const Joi = require('@hapi/joi');
+const config = require('config');
+const jwt = require('jsonwebtoken');
 
 const MemberSchema = new mongoose.Schema({
   name: {
@@ -141,6 +143,10 @@ const MemberSchema = new mongoose.Schema({
     type: String,
     default: null,
     trim: true
+  },
+  admin: {
+    type: Boolean,
+    default: false
   },
   resetPasswordToken: {
     type: String
@@ -315,6 +321,11 @@ function validatePassword(member) {
 
   return Joi.validate(member, schema);
 }
+
+MemberSchema.methods.generateAuthToken = function() {
+  const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'));
+  return token;
+};
 
 MemberSchema.plugin(timestamps);
 exports.Member = mongoose.model('members', MemberSchema);
