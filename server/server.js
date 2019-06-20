@@ -14,9 +14,8 @@ app.use(helmet());
 app.use(cors());
 
 // Load API Routes
-app.use("/api/members", require('./routes/members'));
-app.use("/api/catalogs", require('./routes/catalogs'));
-app.use("/api/emails", require('./routes/emails'));
+app.use('/api/members', require('./routes/members'));
+app.use('/api/catalogs', require('./routes/catalogs'));
 
 // Enable Proxy Trust
 app.enable('trust proxy');
@@ -26,23 +25,22 @@ console.log('Application Name: ' + config.get('name'));
 
 //Morgan Logging
 if (app.get('env') === 'development') {
-    app.use(morgan('tiny'));
-    console.log(`Morgan enabled...`);
+  app.use(morgan('tiny'));
+  console.log(`Morgan enabled...`);
 }
 
 // MongoDB Connection using config & .env in docker for credentials
 const DB_HOST = config.get('database.host');
 const connectWithRetry = async () => {
-    try {
-        await mongoose.connect(DB_HOST, { useNewUrlParser: true, autoReconnect: true, useFindAndModify: false });
-        console.log("Connected to MongoDB..");
-    } catch (error) {
-        console.log(error.message);
-        setTimeout(connectWithRetry, 5000);
-    }
-}
+  try {
+    await mongoose.connect(DB_HOST, { useNewUrlParser: true, autoReconnect: true, useFindAndModify: false, useCreateIndex: true });
+    console.log('Connected to MongoDB..');
+  } catch (error) {
+    console.log(error.message);
+    setTimeout(connectWithRetry, 5000);
+  }
+};
 connectWithRetry();
-
 
 const SERVER_PORT = config.get('server.port') || 5001;
 app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}...`));

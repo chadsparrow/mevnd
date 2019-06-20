@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   server:
     container_name: team_builder_app
@@ -15,7 +15,7 @@ services:
       - .env
     command: npm run dev
   mongo:
-    container_name: mongo
+    container_name: team_builder_mongo
     image: mongo
     restart: always
     ports:
