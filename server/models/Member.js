@@ -323,7 +323,7 @@ function validatePassword(member) {
 }
 
 MemberSchema.methods.generateAuthToken = function() {
-  const token = jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'));
+  const token = jwt.sign({ _id: this._id, admin: this.admin }, config.get('jwtPrivateKey'));
   return token;
 };
 
