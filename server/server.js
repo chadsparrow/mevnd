@@ -1,4 +1,6 @@
 //SERVER START-UP CODE
+const Joi = require('@hapi/joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const winston = require('winston');
 require('winston-mongodb');
 require('winston-daily-rotate-file');
