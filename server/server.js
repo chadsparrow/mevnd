@@ -6,11 +6,11 @@ const config = require('config');
 const morgan = require('morgan');
 const express = require('express');
 require('express-async-errors');
-const app = express();
 const helmet = require('helmet');
 const cors = require('cors');
 const error = require('./middleware/error');
 const mongoose = require('mongoose');
+const app = express();
 
 // Set up express, security and cors
 app.use(express.json());
@@ -26,6 +26,15 @@ const DB_HOST = config.get('database.host');
 // setup winston
 winston.add(winston.transports.DailyRotateFile, { filename: './logs/application-%DATE%.log', maxFiles: '14d' });
 winston.add(winston.transports.MongoDB, { db: DB_HOST });
+
+process.on('uncaughtException', ex => {
+  winston.error(ex.message, ex);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', ex => {
+  throw ex;
+});
 
 const connectWithRetry = async () => {
   try {
