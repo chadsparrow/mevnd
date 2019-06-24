@@ -10,18 +10,14 @@ router.post('/', async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  try {
-    const member = await Member.findOne({ email: req.body.email });
-    if (!member) return res.status(400).send('Invalid email or password.');
+  const member = await Member.findOne({ email: req.body.email });
+  if (!member) return res.status(400).send('Invalid email or password.');
 
-    const validPassword = await bcrypt.compare(req.body.password, member.password);
-    if (!validPassword) return res.status(400).send('Invalid email or password');
+  const validPassword = await bcrypt.compare(req.body.password, member.password);
+  if (!validPassword) return res.status(400).send('Invalid email or password');
 
-    const token = member.generateAuthToken();
-    res.send(token);
-  } catch (err) {
-    console.log(err);
-  }
+  const token = member.generateAuthToken();
+  res.send(token);
 });
 
 function validate(req) {

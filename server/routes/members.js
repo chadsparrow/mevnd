@@ -28,7 +28,7 @@ router.get('/:id', auth, async (req, res) => {
 });
 
 // POST /api/members
-router.post('/', async (req, res) => {
+router.post('/register', async (req, res) => {
   const { error } = validateMember(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
