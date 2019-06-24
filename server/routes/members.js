@@ -9,6 +9,7 @@ const { Member, validateMember, validateUpdate, validateEmail, validatePassword 
 
 // GET /api/members
 router.get('/', auth, async (req, res) => {
+  throw new Error('Cannot find the members');
   const members = await Member.find().select('-password -__v -updatedAt -admin');
   if (members && members.length === 0) return res.send({ msg: 'There are no members in the database.' });
   res.send(members);

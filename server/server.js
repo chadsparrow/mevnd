@@ -4,8 +4,6 @@ const morgan = require('morgan');
 const express = require('express');
 require('express-async-errors');
 const app = express();
-const winston = require('winston');
-require('winston-mongodb');
 const helmet = require('helmet');
 const cors = require('cors');
 const error = require('./middleware/error');
@@ -17,17 +15,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(helmet());
 app.use(cors());
-
-// Enable Proxy Trust
 app.enable('trust proxy');
 
+// setup db_host variable
 const DB_HOST = config.get('database.host');
+
 const connectWithRetry = async () => {
   try {
     await mongoose.connect(DB_HOST, { useNewUrlParser: true, autoReconnect: true, useFindAndModify: false, useCreateIndex: true });
-    winston.info('Connected to MongoDB..');
+    console.log('Connected to MongoDB..');
   } catch (err) {
-    winston.error(err.message, err);
+    logger.error(err.message, err);
     setTimeout(connectWithRetry, 5000);
   }
 };
@@ -39,25 +37,9 @@ if (app.get('env') === 'development') {
   console.log(`Morgan enabled...`);
 }
 
-//Winston logging transports
-winston.add(winston.transports.File, { filename: './logs/logfile.log' });
-winston.add(winston.transports.MongoDB, {
-  db: DB_HOST,
-  level: 'error'
-});
-
-winston.handleExceptions(
-  new winston.transports.Console({ colorize: true, prettyPrint: true }),
-  new winston.transports.File({ filename: './logs/uncaughtExceptions.log' })
-);
-
-process.on('unhandledRejection', ex => {
-  throw ex;
-});
-
 // Check if jwtPrivateKey env variable is set
 if (!config.get('jwtPrivateKey')) {
-  winston.error('FATAL ERROR: jwtPrivateKey is not defined.');
+  logger.error('FATAL ERROR: jwtPrivateKey is not defined.');
   process.exit(1);
 }
 
@@ -75,3 +57,5 @@ console.log('Application Name: ' + config.get('name'));
 
 // configures server to listen to configured server port above
 app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}...`));
+
+module.exports = logger;
