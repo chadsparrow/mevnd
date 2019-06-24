@@ -153,11 +153,24 @@ const MemberSchema = new mongoose.Schema({
   },
   resetPasswordExpires: {
     type: Date
-  }
+  },
+  notifications: [
+    {
+      date: {
+        type: Date,
+        required: true
+      },
+      message: {
+        type: String,
+        required: true,
+        trim: true
+      }
+    }
+  ]
 });
 
 MemberSchema.statics.lookup = function(memberId) {
-  return this.findOne({ _id: memberId });
+  return this.findById(memberId);
 };
 
 function validateMember(member) {
@@ -322,6 +335,15 @@ function validatePassword(member) {
   return Joi.validate(member, schema);
 }
 
+function validateNotification(notification) {
+  const schema = {
+    recipients: Joi.array().items(Joi.objectId().required()),
+    message: Joi.string().required()
+  };
+
+  return Joi.validate(notification, schema);
+}
+
 MemberSchema.methods.generateAuthToken = function() {
   const token = jwt.sign({ _id: this._id, admin: this.admin }, config.get('jwtPrivateKey'));
   return token;
@@ -333,3 +355,4 @@ exports.validateMember = validateMember;
 exports.validateUpdate = validateUpdate;
 exports.validateEmail = validateEmail;
 exports.validatePassword = validatePassword;
+exports.validateNotification = validateNotification;

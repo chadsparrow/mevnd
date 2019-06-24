@@ -16,7 +16,7 @@ router.get('/', auth, async (req, res) => {
 
 // GET /api/members/me
 router.get('/me', auth, async (req, res) => {
-  const member = await Member.findById(req.member._id).select('-password -__v -updatedAt');
+  const member = await Member.lookup(req.member._id).select('-password -__v -updatedAt');
   res.send(member);
 });
 

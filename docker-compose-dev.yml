@@ -1,5 +1,16 @@
 version: '3'
 services:
+  mongo:
+    container_name: team_builder_mongo
+    image: mongo
+    restart: always
+    ports:
+      - 27018:27018
+    volumes:
+      - mongodbdata:/data/db
+    env_file:
+      - .env
+    command: mongod --port 27018
   server:
     container_name: team_builder_app
     image: registry.gitlab.com/garneau-dev/sugoi/kit-creator/app:0.1.0
@@ -14,16 +25,5 @@ services:
     env_file:
       - .env
     command: npm run dev
-  mongo:
-    container_name: team_builder_mongo
-    image: mongo
-    restart: always
-    ports:
-      - 27018:27018
-    volumes:
-      - mongodbdata:/data/db
-    env_file:
-      - .env
-    command: mongod --port 27018
 volumes:
   mongodbdata:

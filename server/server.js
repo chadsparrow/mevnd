@@ -63,8 +63,8 @@ if (!config.get('jwtPrivateKey')) {
 
 // Load API Routes
 app.use('/api/members', require('./routes/members'));
-app.use('/api/catalogs', require('./routes/catalogs'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/notifications', require('./routes/notifications'));
 app.use(error);
 
 // configures server port
