@@ -1,4 +1,7 @@
 //SERVER START-UP CODE
+const winston = require('winston');
+require('winston-mongodb');
+require('winston-daily-rotate-file');
 const config = require('config');
 const morgan = require('morgan');
 const express = require('express');
@@ -20,26 +23,30 @@ app.enable('trust proxy');
 // setup db_host variable
 const DB_HOST = config.get('database.host');
 
+// setup winston
+winston.add(winston.transports.DailyRotateFile, { filename: './logs/application-%DATE%.log', maxFiles: '14d' });
+winston.add(winston.transports.MongoDB, { db: DB_HOST });
+
 const connectWithRetry = async () => {
   try {
     await mongoose.connect(DB_HOST, { useNewUrlParser: true, autoReconnect: true, useFindAndModify: false, useCreateIndex: true });
-    console.log('Connected to MongoDB..');
+    winston.info('Connected to MongoDB..');
   } catch (err) {
-    logger.error(err.message, err);
+    winston.error(err.message, err);
     setTimeout(connectWithRetry, 5000);
   }
 };
 connectWithRetry();
 
-//Morgan Logging
+//Morgan development API call Logging
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'));
-  console.log(`Morgan enabled...`);
+  winston.info(`Morgan enabled...`);
 }
 
 // Check if jwtPrivateKey env variable is set
 if (!config.get('jwtPrivateKey')) {
-  logger.error('FATAL ERROR: jwtPrivateKey is not defined.');
+  winston.error('FATAL ERROR: jwtPrivateKey is not defined.');
   process.exit(1);
 }
 
@@ -53,9 +60,7 @@ app.use(error);
 const SERVER_PORT = config.get('server.port') || 5001;
 
 //Displays environment application is in
-console.log('Application Name: ' + config.get('name'));
+winston.info('Application Name: ' + config.get('name'));
 
 // configures server to listen to configured server port above
-app.listen(SERVER_PORT, () => console.log(`Listening on port ${SERVER_PORT}...`));
-
-module.exports = logger;
+app.listen(SERVER_PORT, () => winston.info(`Listening on port ${SERVER_PORT}...`));
