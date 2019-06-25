@@ -9,7 +9,7 @@ const { Member, validateMember, validateUpdate, validateEmail, validatePassword 
 
 // GET /api/members
 router.get('/', auth, async (req, res) => {
-  const members = await Member.find().select('-password -__v -updatedAt -admin');
+  const members = await Member.find().select('-password -__v -updatedAt -admin -notifications');
   if (members && members.length === 0) return res.send({ msg: 'There are no members in the database.' });
   res.send(members);
 });
@@ -22,7 +22,7 @@ router.get('/me', auth, async (req, res) => {
 
 // GET /api/members/:id
 router.get('/:id', auth, async (req, res) => {
-  const member = await Member.lookup(req.params.id).select('-__v -password -updatedAt -admin');
+  const member = await Member.lookup(req.params.id).select('-__v -password -updatedAt -admin -notifications');
   if (!member) return res.status(404).send({ msg: 'Member with the given ID was not found.' });
   res.send(member);
 });
@@ -58,6 +58,8 @@ router.post('/register', async (req, res) => {
       'shipping_phone'
     ])
   );
+
+  member.notifications.push({ date: new Date(), message: 'Welcome to LGS Team Builder!' });
 
   const salt = await bcrypt.genSalt(10);
   member.password = await bcrypt.hash(member.password, salt);
