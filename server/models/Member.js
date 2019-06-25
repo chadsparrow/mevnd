@@ -164,6 +164,9 @@ const MemberSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+      },
+      clickTo: {
+        type: String
       }
     }
   ]
@@ -338,7 +341,8 @@ function validatePassword(member) {
 function validateNotification(notification) {
   const schema = {
     recipients: Joi.array().items(Joi.objectId().required()),
-    message: Joi.string().required()
+    message: Joi.string().required(),
+    clickTo: Joi.string().allow('', null)
   };
 
   return Joi.validate(notification, schema);

@@ -20,7 +20,8 @@ router.post('/', auth, async (req, res) => {
     const today = new Date();
     const newNotification = {
       date: today,
-      message: req.body.message
+      message: req.body.message,
+      clickTo: req.body.clickTo
     };
 
     member.notifications.push(newNotification);
