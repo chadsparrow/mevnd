@@ -1,4 +1,4 @@
-const { Email, validateEmail } = require('../models/Email');
+const { Email, validateEmail, validateMessage } = require('../models/Email');
 const { Member } = require('../models/Member');
 const express = require('express');
 const router = express.Router();
@@ -14,9 +14,11 @@ router.get('/me', auth, async (req, res) => {
       { messages: { $elemMatch: { sentBy: mongoose.Types.ObjectId(req.member._id) } } }
     ]
   })
-    .populate('sender', 'name email -_id', Member)
-    .populate('recipients.member', 'name email -_id', Member)
-    .select('-__v -updatedAt');
+    .populate('sender', 'name email', Member)
+    .populate('recipients.member', 'name email', Member)
+    .populate('messages.sentBy', 'name email', Member)
+    .sort('-messages.date')
+    .select('-__v');
   res.send(emails);
 });
 
@@ -46,47 +48,85 @@ router.post('/', auth, async (req, res) => {
 
   newEmail.messages.push({ message: req.body.message, date: new Date(), sentBy: req.member._id });
 
-  await newEmail.save();
+  let savedEmail = await newEmail.save();
+  let populatedEmail = await populateEmail(savedEmail);
 
-  res.send({ msg: 'Email Sent!' });
+  res.send(populatedEmail);
 });
 
-router.patch('/toggleread/:id', auth, async (req, res) => {
+router.patch('/:id/tr', auth, async (req, res) => {
   let member = await Member.lookup(req.member._id);
   if (!member) return res.status(400).send('Member with the given ID was not found.');
 
   let email = await Email.findById(req.params.id);
   if (!email) return res.status(400).send(`Email with the given ID was not found.`);
 
-  for (recipient of email.recipients) {
+  email.recipients.forEach(recipient => {
     if (recipient.member == req.member._id) {
       recipient.unread = !recipient.unread;
     }
-  }
+  });
 
-  email = await email.save();
+  let savedEmail = await email.save();
+  let populatedEmail = await populateEmail(savedEmail);
 
-  res.send(email);
+  res.send(populatedEmail);
 });
 
-router.patch('/archive/:id', auth, async (req, res) => {
+router.patch('/:id/archive', auth, async (req, res) => {
   let member = await Member.lookup(req.member._id);
   if (!member) return res.status(400).send('Member with the given ID was not found.');
 
   let email = await Email.findById(req.params.id);
   if (!email) return res.status(400).send(`Email with the given ID was not found.`);
 
-  for (recipient of email.recipients) {
+  email.recipients.forEach(recipient => {
     if (recipient.member == req.member._id && !recipient.archived) {
       recipient.archived = true;
     } else if (recipient.member == req.member._id && recipient.archived) {
-      return res.status(400).send('Email with that ID is already archived.');
+      return res.status(400).send('Email with the given ID is already archived.');
     }
-  }
+  });
 
-  email = await email.save();
+  let savedEmail = await email.save();
+  let populatedEmail = await populateEmail(savedEmail);
 
-  res.send(email);
+  res.send(populatedEmail);
 });
+
+router.patch('/:id/reply', auth, async (req, res) => {
+  const { error } = validateMessage(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  let member = await Member.lookup(req.member._id);
+  if (!member) return res.status(400).send('Member with the given ID was not found.');
+
+  let email = await Email.findById(req.params.id);
+  if (!email) return res.status(400).send(`Email with the given ID was not found.`);
+
+  let newMessage = {
+    message: req.body.message,
+    sentBy: req.member._id,
+    date: new Date()
+  };
+
+  email.messages.push(newMessage);
+
+  let savedEmail = await email.save();
+  let populatedEmail = await populateEmail(savedEmail);
+  res.send(populatedEmail);
+});
+
+function populateEmail(email) {
+  return new Promise(async (resolve, reject) => {
+    const opts = [
+      { path: 'sender', select: 'name email' },
+      { path: 'recipients.member', select: 'name email' },
+      { path: 'messages.sentBy', select: 'name email' }
+    ];
+    const populatedEmail = await Member.populate(email, opts);
+    resolve(_.pick(populatedEmail, ['_id', 'sender', 'subject', 'recipients', 'messages', 'updatedAt', 'createdAt']));
+  });
+}
 
 module.exports = router;

@@ -3,6 +3,10 @@ const timestamps = require('mongoose-timestamp');
 const Joi = require('@hapi/joi');
 
 const EmailSchema = new mongoose.Schema({
+  sender: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Member'
+  },
   recipients: [
     {
       _id: false,
@@ -55,6 +59,14 @@ function validateEmail(email) {
   return Joi.validate(email, schema);
 }
 
+function validateMessage(message) {
+  const schema = {
+    message: Joi.string().required()
+  };
+  return Joi.validate(message, schema);
+}
+
 EmailSchema.plugin(timestamps);
 exports.Email = mongoose.model('emails', EmailSchema);
 exports.validateEmail = validateEmail;
+exports.validateMessage = validateMessage;
