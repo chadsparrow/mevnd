@@ -8,19 +8,9 @@ const config = require('config');
 const morgan = require('morgan');
 const express = require('express');
 require('express-async-errors');
-const helmet = require('helmet');
-const cors = require('cors');
-const error = require('./middleware/error');
 const mongoose = require('mongoose');
 const app = express();
-
-// Set up express, security and cors
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
-app.use(helmet());
-app.use(cors());
-app.enable('trust proxy');
+require('./startup/routes')(app);
 
 // setup db_host variable
 const DB_HOST = config.get('database.host');
@@ -60,13 +50,6 @@ if (!config.get('jwtPrivateKey')) {
   winston.error('FATAL ERROR: jwtPrivateKey is not defined.');
   process.exit(1);
 }
-
-// Load API Routes
-app.use('/api/members', require('./routes/members'));
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/notifications', require('./routes/notifications'));
-app.use('/api/emails', require('./routes/emails'));
-app.use(error);
 
 // configures server port
 const SERVER_PORT = config.get('server.port') || 5001;
