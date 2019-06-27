@@ -64,7 +64,7 @@ router.post('/register', async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   member.password = await bcrypt.hash(member.password, salt);
   await member.save();
-  res.status(201).send(_.pick(member, ['_id', 'name', 'email']));
+  res.send(_.pick(member, ['_id', 'name', 'email']));
 });
 
 // PUT /api/members/:id

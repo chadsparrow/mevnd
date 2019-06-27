@@ -28,7 +28,7 @@ router.post('/', auth, async (req, res) => {
     await member.save();
   }
 
-  res.status(201).end();
+  res.end();
 });
 
 router.delete('/:id', auth, async (req, res) => {
@@ -54,7 +54,7 @@ router.delete('/all', auth, async (req, res) => {
   member.notifications = [];
   await member.save();
 
-  res.status(205).send(member.notifications);
+  res.send(member.notifications);
 });
 
 module.exports = router;

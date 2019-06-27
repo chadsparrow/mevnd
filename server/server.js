@@ -45,6 +45,5 @@ winston.info('Application Name: ' + config.get('name'));
 
 // configures server port
 const SERVER_PORT = config.get('server.port') || 5001;
-
 // configures server to listen to configured server port above
 app.listen(SERVER_PORT, () => winston.info(`Listening on port ${SERVER_PORT}...`));
