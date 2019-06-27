@@ -1,13 +1,16 @@
 FROM node:8
 
-WORKDIR /usr/src/client
+WORKDIR /usr/src/app/client
 
 COPY package*.json ./
 
-RUN npm install
-
-RUN npm install @vue/cli
+RUN npm install && npm install @vue/cli
 
 COPY . .
 
 EXPOSE 8080
+
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
+RUN chmod +x /wait
+
+CMD /wait && npm run serve

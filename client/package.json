@@ -29,9 +29,17 @@
     },
     "extends": [
       "plugin:vue/essential",
+      "plugin:prettier/recommended",
       "@vue/prettier"
     ],
-    "rules": {},
+    "rules": {
+      "prettier/prettier": [
+        "warn",
+        {
+          "singleQuote": false
+        }
+      ]
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

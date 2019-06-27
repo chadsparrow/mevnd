@@ -1,10 +1,6 @@
 <template>
   <div>
     <h1 class="text-center">{{ msg }}</h1>
-    <form class="text-center">
-      <label class="mr-2" for="name">Name:</label>
-      <input type="text" id="name">
-    </form>
   </div>
 </template>
 
@@ -18,3 +14,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
+<style>
+h1 {
+  color: black;
+}
+</style>
