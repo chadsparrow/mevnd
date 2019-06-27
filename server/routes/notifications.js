@@ -47,7 +47,7 @@ router.delete('/:id', auth, async (req, res) => {
   res.send(member.notifications);
 });
 
-router.get('/clear', auth, async (req, res) => {
+router.delete('/all', auth, async (req, res) => {
   let member = await Member.lookup(req.member._id);
   if (!member) return res.status(400).send('Member with the given ID was not found.');
 

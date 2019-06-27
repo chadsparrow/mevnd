@@ -33,12 +33,11 @@ router.post('/', auth, async (req, res) => {
 
   recipients.push({ member: req.member._id, unread: false });
 
-  for (recipient of req.body.recipients) {
+  req.body.recipients.forEach(async recipient => {
     let member = await Member.lookup(recipient);
-    if (!member) return res.status(400).send(`Recipient with a given ID (${recipient}) was not found. Please try again.`);
-
+    if (!member) return res.status(400).send(`Recipient with the given ID (${recipient}) was not found. Please try again.`);
     recipients.push({ member: recipient });
-  }
+  });
 
   const newEmail = new Email({
     sender: req.member._id,
