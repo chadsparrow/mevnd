@@ -50,7 +50,7 @@ router.post('/', auth, async (req, res) => {
   let savedEmail = await newEmail.save();
   let populatedEmail = await populateEmail(savedEmail);
 
-  res.send(populatedEmail);
+  res.status(201).send(populatedEmail);
 });
 
 router.patch('/:id/tr', auth, async (req, res) => {
@@ -93,7 +93,7 @@ router.patch('/:id/archive', auth, async (req, res) => {
   res.send(populatedEmail);
 });
 
-router.patch('/:id/reply', auth, async (req, res) => {
+router.post('/:id/reply', auth, async (req, res) => {
   const { error } = validateMessage(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -113,7 +113,7 @@ router.patch('/:id/reply', auth, async (req, res) => {
 
   let savedEmail = await email.save();
   let populatedEmail = await populateEmail(savedEmail);
-  res.send(populatedEmail);
+  res.status(201).send(populatedEmail);
 });
 
 function populateEmail(email) {
