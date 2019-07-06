@@ -35,7 +35,7 @@ process.on('unhandledRejection', ex => {
 });
 
 //Morgan development API call Logging
-if (app.get('NODE_ENV') === 'development') {
+if (app.get('env') === 'development') {
   app.use(morgan('tiny'));
   winston.info(`Morgan enabled...`);
 }
