@@ -3,7 +3,10 @@
     "port": "SERVER_PORT"
   },
   "database": {
-    "host": "DB_HOST"
+    "user": "MONGO_INITDB_ROOT_USERNAME",
+    "pass": "MONGO_INITDB_ROOT_PASSWORD",
+    "db": "MONGO_INITDB_ROOT_DB",
+    "port": "MONGO_INITDB_ROOT_PORT"
   },
   "jwtPrivateKey": "JWT_PRIVATE_KEY"
 }

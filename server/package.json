@@ -1,7 +1,7 @@
 {
-  "name": "lgs-team-builder",
+  "name": "mevnd_stack",
   "version": "1.0.0",
-  "description": "Kit Order Replacement App for LG/Sugoi",
+  "description": "Docker Compose Scaffold for a full MEVN Stack - MongoDB, Express, Vue, Node Stack using Docker Containers",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
@@ -9,7 +9,7 @@
     "test": "jest --watchAll --verbose"
   },
   "author": "Chad Sparrow",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "devDependencies": {
     "jest": "^24.8.0",
     "nodemon": "^1.18.10"
@@ -26,7 +26,6 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "mongoose": "^5.6.0",
-    "mongoose-timestamp": "^0.6.0",
     "morgan": "^1.9.1",
     "winston": "^2.4.4",
     "winston-daily-rotate-file": "^3.9.0",

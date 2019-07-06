@@ -1,40 +1,44 @@
 version: '3'
-
-networks:
-  default:
-    ipam:
-      driver: default
-      config:
-        - subnet: ${LGS_HOST_SUBNET}/24
 services:
   mongo:
-    restart: always
+    container_name: mevnstack_mongodb
     image: mongo
+    restart: always
     ports:
-      - 27018:27018
+      - 27017:27017
     volumes:
-      - /data/storage/team-builder.mongodb:/data/db
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-    command: mongod --port 27018
+      - mongodbdata:/data/db
     env_file:
       - .env
-  app:
-    command: npm run start
-    image: ${LGS_DOCKER_IMAGE}
+  server:
+    container_name: mevnstack_backend
+    image: chadsparrow/mevn_stack:backend
     restart: always
-    working_dir: /usr/src/app/server
     ports:
-      - 5001:5001
+      - 5000:5000
     volumes:
-      - /data/logs/team-builder:/usr/src/app/server/logs
-      - /data/logs/team-builder/npm:/root/.npm/
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
+      - ./server:/usr/src/app/server
+      - /usr/src/app/server/node_modules
     depends_on:
       - mongo
     env_file:
       - .env
+    environment:
+      WAIT_HOSTS: mongo:27017
+  vue-dev:
+    container_name: mevnstack_frontend_dev
+    image: chadsparrow/mevn_stack:frontend
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./client:/usr/src/app/client
+      - /usr/src/app/client/node_modules
+    depends_on:
+      - server
+    env_file:
+      - .env
+    environment:
+      WAIT_HOSTS: server:5000
+volumes:
+  mongodbdata:

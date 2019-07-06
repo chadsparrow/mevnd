@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const timestamps = require('mongoose-timestamp');
 const Joi = require('@hapi/joi');
 const config = require('config');
 const jwt = require('jsonwebtoken');
@@ -170,7 +169,7 @@ const MemberSchema = new mongoose.Schema({
       }
     }
   ]
-});
+},{timestamps: true});
 
 MemberSchema.statics.lookup = function(memberId) {
   return this.findById(memberId);
@@ -353,7 +352,6 @@ MemberSchema.methods.generateAuthToken = function() {
   return token;
 };
 
-MemberSchema.plugin(timestamps);
 exports.Member = mongoose.model('members', MemberSchema);
 exports.validateMember = validateMember;
 exports.validateUpdate = validateUpdate;

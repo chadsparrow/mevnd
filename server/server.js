@@ -10,7 +10,13 @@ const express = require('express');
 require('express-async-errors');
 const app = express();
 require('./startup/routes')(app);
-const DB_HOST = config.get('database.host');
+
+// setup MongoDB configuration
+const DB_USER = config.get('database.user');
+const DB_PASS = config.get('database.pass');
+const DB_DB = config.get('database.db');
+const DB_PORT = config.get('database.port');
+const DB_HOST = `mongodb://${DB_USER}:${DB_PASS}@mongo:${DB_PORT}/${DB_DB}?authSource=admin`;
 require('./startup/db')(DB_HOST);
 
 // setup winston
@@ -29,7 +35,7 @@ process.on('unhandledRejection', ex => {
 });
 
 //Morgan development API call Logging
-if (app.get('env') === 'development') {
+if (app.get('NODE_ENV') === 'development') {
   app.use(morgan('tiny'));
   winston.info(`Morgan enabled...`);
 }
@@ -44,6 +50,6 @@ if (!config.get('jwtPrivateKey')) {
 winston.info('Application Name: ' + config.get('name'));
 
 // configures server port
-const SERVER_PORT = config.get('server.port') || 5001;
+const SERVER_PORT = config.get('server.port') || 5000;
 // configures server to listen to configured server port above
 app.listen(SERVER_PORT, () => winston.info(`Listening on port ${SERVER_PORT}...`));

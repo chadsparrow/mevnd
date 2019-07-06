@@ -59,8 +59,6 @@ router.post('/register', async (req, res) => {
     ])
   );
 
-  member.notifications.push({ date: new Date(), message: 'Welcome to Team Builder!' });
-
   const salt = await bcrypt.genSalt(10);
   member.password = await bcrypt.hash(member.password, salt);
   await member.save();

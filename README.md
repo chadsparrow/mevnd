@@ -1,3 +1,2 @@
-# Team Builder - Kit Order Replacement
-
-custom kit team store online app used for both LG and Sugoi
+# MEVND STACK
+A full development stack in 3 Docker Containers - MongoDB, Express, Vue, Node

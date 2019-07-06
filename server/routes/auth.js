@@ -5,7 +5,7 @@ const Joi = require('@hapi/joi');
 
 const { Member } = require('../models/Member');
 
-// POST /api/members
+// POST /api/auth
 router.post('/', async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
