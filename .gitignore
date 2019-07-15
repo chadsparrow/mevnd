@@ -1,5 +1,6 @@
 .env
 .env.development
+.env.test
 /logs
 server/logs
 node_modules
