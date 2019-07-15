@@ -39,13 +39,13 @@ process.on("unhandledRejection", ex => {
 });
 
 // Check if JWT_PRIVATE_KEY and NODE_ENV env variables are set and quit the process if not found.
-if (!config.get("jwtPrivateKey") || !config.get("server.environment")) {
+if (!config.get("jwtPrivateKey")) {
   winston.error("FATAL ERROR: jwtPrivateKey is not defined.");
   process.exit(1);
 }
 
 // API request Logging only during development
-if (config.get("server.environment") === "development") {
+if (app.get("env") === "development") {
   app.use(morgan("tiny"));
   winston.info(`Morgan enabled...`);
 }
