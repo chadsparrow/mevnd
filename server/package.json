@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -L --delay 2500ms server.js",
     "start": "node server.js",
-    "test": "jest"
+    "test": "jest --watchAll --verbose"
   },
   "author": "Chad Sparrow",
   "license": "ISC",
