@@ -9,7 +9,7 @@ services:
     volumes:
       - mongodbdata:/data/db
     env_file:
-      - .env
+      - .env.development
   server:
     container_name: mevnstack_backend_dev
     image: chadsparrow/mevn_stack:backend-dev
@@ -22,7 +22,7 @@ services:
     depends_on:
       - mongo
     env_file:
-      - .env
+      - .env.development
     environment:
       WAIT_HOSTS: mongo:27017
   vue-dev:
@@ -37,7 +37,7 @@ services:
     depends_on:
       - server
     env_file:
-      - .env
+      - .env.development
     environment:
       WAIT_HOSTS: server:5000
 volumes:
