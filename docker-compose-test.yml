@@ -25,20 +25,5 @@ services:
       - .env.test
     environment:
       WAIT_HOSTS: mongo:27017
-  vue-dev:
-    container_name: mevnstack_frontend_dev
-    image: chadsparrow/mevn_stack:frontend-dev
-    restart: always
-    ports:
-      - 8080:8080
-    volumes:
-      - ./client:/usr/src/app/client
-      - /usr/src/app/client/node_modules
-    depends_on:
-      - server
-    env_file:
-      - .env.test
-    environment:
-      WAIT_HOSTS: server:5000
 volumes:
   mongodbdata:
