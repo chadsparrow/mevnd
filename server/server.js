@@ -4,7 +4,6 @@ Joi.objectId = require("joi-objectid")(Joi); // allows joi to validate mongo Obj
 const winston = require("winston"); //logging middleware
 require("winston-mongodb"); // allows winston to store logs on mongodb under "log" collection
 require("winston-daily-rotate-file"); // allows winston to create a file per day
-const morgan = require("morgan"); // request logging during development
 const config = require("config"); // store app configurations and environments
 const express = require("express");
 require("express-async-errors"); // automatically catches async errors without try catch blocks
@@ -42,12 +41,6 @@ process.on("unhandledRejection", ex => {
 if (!config.get("jwtPrivateKey")) {
   winston.error("FATAL ERROR: jwtPrivateKey is not defined.");
   process.exit(1);
-}
-
-// API request Logging only during development
-if (app.get("env") === "development") {
-  app.use(morgan("tiny"));
-  winston.info(`Morgan enabled...`);
 }
 
 //Displays environment application is in

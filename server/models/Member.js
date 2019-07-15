@@ -132,7 +132,9 @@ const MemberSchema = new mongoose.Schema(
     },
     shipping_email: {
       type: String,
-      required: true,
+      required: function() {
+        return this.shipping_same;
+      },
       trim: true
     },
     timezone: {

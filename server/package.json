@@ -4,7 +4,7 @@
   "description": "Docker Compose Scaffold for a full MEVN Stack - MongoDB, Express, Vue, Node Stack using Docker Containers",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon -L --delay 2500ms server.js",
     "start": "node server.js",
     "test": "jest --watchAll --verbose"
   },
@@ -26,7 +26,6 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.14",
     "mongoose": "^5.6.0",
-    "morgan": "^1.9.1",
     "winston": "^2.4.4",
     "winston-daily-rotate-file": "^3.9.0",
     "winston-mongodb": "^3.0.2"
