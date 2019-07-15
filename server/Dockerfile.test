@@ -1,6 +1,10 @@
-FROM node:8
+FROM node:8.9.4
 
 ENV NODE_ENV="test"
+
+RUN apt-get update -qq
+RUN apt-get install -y build-essential
+RUN apt-get install -y git
 
 WORKDIR /usr/src/app/server
 
