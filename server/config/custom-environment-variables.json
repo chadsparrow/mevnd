@@ -1,6 +1,7 @@
 {
   "server": {
-    "port": "SERVER_PORT"
+    "port": "APP_PORT",
+    "environment": "NODE_ENV"
   },
   "database": {
     "user": "MONGO_INITDB_ROOT_USERNAME",

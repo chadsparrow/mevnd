@@ -1,7 +1,7 @@
-version: '3'
+version: "3"
 services:
   mongo:
-    container_name: mevnstack_mongodb
+    container_name: mevnstack_mongodb_dev
     image: mongo
     restart: always
     ports:
@@ -11,8 +11,8 @@ services:
     env_file:
       - .env
   server:
-    container_name: mevnstack_backend
-    image: chadsparrow/mevn_stack:backend
+    container_name: mevnstack_backend_dev
+    image: chadsparrow/mevn_stack:backend-dev
     restart: always
     ports:
       - 5000:5000
@@ -27,7 +27,7 @@ services:
       WAIT_HOSTS: mongo:27017
   vue-dev:
     container_name: mevnstack_frontend_dev
-    image: chadsparrow/mevn_stack:frontend
+    image: chadsparrow/mevn_stack:frontend-dev
     restart: always
     ports:
       - 8080:8080
