@@ -1,3 +1,4 @@
 {
-    "name": "MEVND STACK - TEST"
+  "name": "MEVND STACK - TEST",
+  "jwtPrivateKey": "1234"
 }

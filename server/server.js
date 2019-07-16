@@ -49,4 +49,6 @@ winston.info("Application Name: " + config.get("name"));
 // configures server port
 const APP_PORT = config.get("server.port") || 5000;
 // configures server to listen to configured server port above
-app.listen(APP_PORT, () => winston.info(`Now Listening on port ${APP_PORT}...`));
+const server = app.listen(APP_PORT, () => winston.info(`Now Listening on port ${APP_PORT}...`));
+
+module.exports = server;
