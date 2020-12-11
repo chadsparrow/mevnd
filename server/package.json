@@ -30,6 +30,7 @@
     "winston": "^2.4.4",
     "winston-daily-rotate-file": "^3.9.0",
     "winston-mongodb": "^3.0.2",
-    "minimist": ">=1.2.3"
+    "minimist": ">=1.2.3",
+    "helmet-csp": ">=2.9.1"
   }
 }
